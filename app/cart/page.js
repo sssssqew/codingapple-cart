@@ -1,22 +1,28 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function Cart() {
-  const [update, setUpdate] = useState(false)
-  const cartInfo = JSON.parse(localStorage.getItem('cartInfo'))
-  console.log("데이터 전달: ", cartInfo)
+  const [carts, setUpdate] = useState(false)
   
   const increaseQty = (product, i) => {
     let cartInfo = JSON.parse(localStorage.getItem('cartInfo'))
     cartInfo = cartInfo.map(cart => cart.name == product.name ? {...cart, qty: product.qty + 1}: cart)
     localStorage.setItem('cartInfo', JSON.stringify(cartInfo))
-    setUpdate(!update)
+    setUpdate(cartInfo)
   }
+
+  useEffect(() => {
+      const cartInfo = JSON.parse(localStorage.getItem('cartInfo'))
+      console.log("데이터 전달: ", cartInfo)
+      setUpdate(cartInfo)
+  }, [])
+
   return (
     <div>
       <h4 className="title">Cart</h4>
-      {cartInfo.map((product, i) => <CartItem key={i} {...product} handleClick={() => increaseQty(product, i)}/>)} 
+      {carts &&
+      carts.map((product, i) => <CartItem key={i} {...product} handleClick={() => increaseQty(product, i)}/>)} 
     </div>
   )
 }

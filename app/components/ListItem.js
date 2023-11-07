@@ -7,7 +7,12 @@ export default function ListItem({ name, price, imgSrc }){
   const router = useRouter()
   const addItemToCart = () => {
     let cartInfo = JSON.parse(localStorage.getItem('cartInfo')) ?? []
-    cartInfo.push({name, price, qty: 1})
+    
+    if(cartInfo.filter(cart => cart.name === name).length == 0){
+      cartInfo.push({name, price, qty: 1})
+    }else{
+      console.log("이미 카트에 담겨있어요 !")
+    }
     localStorage.setItem('cartInfo', JSON.stringify(cartInfo))
     router.push('/cart')
   }
